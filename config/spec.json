@@ -1,0 +1,134 @@
+{
+    "$id": "spec.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SFTP Source Connector",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "source",
+        "destination"
+    ],
+    "properties": {
+        "source": {
+            "title": "Details to connect to sftp source.",
+            "type": "object",
+            "required": [
+                "secret",
+                "file_path",
+                "file_type"
+            ],
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "file path to read in sftp server."
+                },
+                "file_type": {
+                    "type": "string",
+                    "enum":["PARQUET"],
+                    "description": "file type. Currently only PARQUET is tested."
+                },
+                "secret": {
+                    "title": "Details to connect to sftp source.",
+                    "type": "object",
+                    "required": [
+                        "hostname",
+                        "username",
+                        "port",
+                        "secret",
+                        "secret_type"
+                    ],
+                    "properties": {
+                        "hostname": {
+                            "type": "string",
+                            "description": "host for sftp server."
+                        },
+                        "username": {
+                            "type": "string",
+                            "description": "user to connect to sftp server."
+                        },
+                        "port": {
+                            "type": "integer",
+                            "default": 22,
+                            "description": "port on which to connect."
+                        },
+                        "secret": {
+                            "type": "string",
+                            "description": "secret to authenticate to server. can be password or private key."
+                        },
+                        "secret_type": {
+                            "type": "string",
+                            "enum": [
+                                "PASSWORD",
+                                "PRIVATE_KEY"
+                            ],
+                            "default": "PASSWORD",
+                            "description": "type of secret."
+                        }
+                    }
+                }
+            },
+            "destination": {
+                "title": "Details to connect and dump data in s3.",
+                "type": "object",
+                "required": [
+                    "bucket_name",
+                    "file_name",
+                    "secrets"
+                ],
+                "properties": {
+                    "bucket_name": {
+                        "type": "string",
+                        "description": "bucket to upload file to."
+                    },
+                    "file_name": {
+                        "type": "string",
+                        "description": "file name to use."
+                    },
+                    "secret": {
+                        "type": "object",
+                        "description": "IAM user secrets of user to connect to s3.",
+                        "required": [
+                            "aws_access_key_id",
+                            "aws_secret_access_key",
+                            "region_name"
+                        ],
+                        "properties": {
+                            "aws_access_key_id": {
+                                "type": "string",
+                                "description": "Iam user access key id."
+                            },
+                            "aws_secret_access_key": {
+                                "type": "string",
+                                "description": "Iam user secret key id."
+                            },
+                            "region_name": {
+                                "type": "string",
+                                "description": "region to use."
+                            }
+                        }
+                    }
+                }
+            },
+            "stream_config": {
+                "title": "Buffer streams to use depending upon attached memory.",
+                "type": "object",
+                "required": [
+                    "read_buffer",
+                    "upload_buffer"
+                ],
+                "properties": {
+                    "read_buffer": {
+                        "type": "integer",
+                        "default": 5242880,
+                        "description": "buffer size to use to read buffer from sftp. should be smaller than upload buffer. default 5Mb"
+                    },
+                    "upload_buffer": {
+                        "type": "integer",
+                        "default": 10485760,
+                        "description": "buffer size to use to upload buffer to s3. default 10Mb"
+                    }
+                }
+            }
+        }
+    }
+}

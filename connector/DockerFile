@@ -1,0 +1,18 @@
+FROM python:3.8-slim-buster
+
+# Set the working directory to /
+
+WORKDIR /datapipes_airbyte_images/SFTPSourceConnector/connector
+ADD ./datapipes_airbyte_images/SFTPSourceConnector/connector/requirements.txt /datapipes_airbyte_images/SFTPSourceConnector/connector/requirements.txt
+RUN pip install --no-cache-dir -r /datapipes_airbyte_images/SFTPSourceConnector/connector/requirements.txt
+
+RUN mkdir datapipes_images_utils
+ADD /datapipes_images_utils /datapipes_images_utils
+
+RUN mkdir datapipes_model
+ADD /datapipes_model /datapipes_model
+
+# Copy the current directory contents into the container at /
+ADD ./datapipes_airbyte_images/SFTPSourceConnector/connector/ /datapipes_airbyte_images/SFTPSourceConnector/connector/
+
+ENTRYPOINT ["python3", "/datapipes_airbyte_images/SFTPSourceConnector/connector/main.py"]

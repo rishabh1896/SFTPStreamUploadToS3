@@ -1,0 +1,2 @@
+version: 0.0.2
+dockerRepo: "asia.gcr.io/cc-datapipes-production/datapipes-airbyte/datapipes-sftp-source-to-s3"
